@@ -30,8 +30,8 @@ namespace IntParser
 
             if (input[0] == '-')
             {
-                numberList.Add(input[0]);
                 isNegative = true;
+                input = input.Remove(0, 1);
             }
 
             for (int i = 0; i < input.Length; i++)
@@ -77,16 +77,14 @@ namespace IntParser
 
             var numberList = new List<int>();
             var isNegative = false;
-            var startIndex = 0;
 
             if (input[0] == '-')
             {
-                numberList.Add(input[0]);
                 isNegative = true;
-                startIndex = 1;
+                input = input.Remove(0, 1);
             }
 
-            for (int i = startIndex; i < input.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 if (!char.IsNumber(input[i]))
                 {
@@ -107,10 +105,11 @@ namespace IntParser
         private static int GetIntFromChar(char letter) => letter - CodeZeroAsii;
 
         /// <summary>
-        /// Method for get number from array type int
+        /// Method for get number from array type int.
         /// </summary>
-        /// <param name="inputList">input array</param>
-        /// <returns>result number</returns>
+        /// <param name="inputList">The input list.</param>
+        /// <param name="isNegative">The negative flag.</param>
+        /// <returns>The number.</returns>
         private static int GetNumberFromList(List<int> inputList, bool isNegative)
         {
             var result = 0;
