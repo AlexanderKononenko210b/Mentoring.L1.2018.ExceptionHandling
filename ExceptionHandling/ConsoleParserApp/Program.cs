@@ -81,7 +81,7 @@ namespace ConsoleParserApp
 
             if (!Parser.TryParse(Console.ReadLine(), out var number))
             {
-                Console.WriteLine($"Operation to convert the entered value to int format impossible");
+                Console.WriteLine("Operation to convert the entered value to int format impossible");
             }
             else
             {
@@ -102,7 +102,7 @@ namespace ConsoleParserApp
             Console.WriteLine("Choose the method for converting operation or enter from application:");
             Console.WriteLine("0 - Parse");
             Console.WriteLine("1 - TryParse");
-            Console.WriteLine("2 - Enter from application");
+            Console.WriteLine("2 - Exit from application");
             var answer = Console.ReadLine();
 
             if (answer == "0")
