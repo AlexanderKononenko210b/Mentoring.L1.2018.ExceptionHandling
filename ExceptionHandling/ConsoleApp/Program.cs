@@ -26,8 +26,7 @@ namespace ConsoleApp
                     Console.WriteLine(e.Message);
                 }
 
-                Console.WriteLine("Continue enter?[Y/N]");
-                endOperationFlag = Console.ReadLine() != "Y";
+                endOperationFlag = ShowEndOperationQuestion();
             }
         }
 
@@ -51,5 +50,27 @@ namespace ConsoleApp
         /// <param name="input">The input string.</param>
         /// <returns>The first letter.</returns>
         private static char GetFirstLetter(string input) => input[0];
+
+        /// <summary>
+        /// Show end operation question.
+        /// </summary>
+        /// <returns>True if operation will has to stop otherwase false.</returns>
+        private static bool ShowEndOperationQuestion()
+        {
+            Console.WriteLine("Continue input?[Y/N]");
+            var answer = Console.ReadLine();
+
+            if (answer == "Y")
+            {
+                return false;
+            }
+
+            if (answer == "N")
+            {
+                return true;
+            }
+
+            return ShowEndOperationQuestion();
+        }
     }
 }
