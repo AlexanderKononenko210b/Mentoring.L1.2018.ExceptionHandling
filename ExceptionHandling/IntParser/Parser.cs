@@ -21,24 +21,20 @@ namespace IntParser
         {
             if (string.IsNullOrEmpty(input))
             {
-                if (input == null)
-                {
-                    throw new NullReferenceException("Input argument is null.");
-                }
-
-                throw new ArgumentOutOfRangeException(nameof(input));
+                number = default(int);
+                return false;
             }
 
-            var negativeNumberLabel = 0;
             var numberList = new List<int>();
+            var isNegative = false;
 
             if (input[0] == '-')
             {
                 numberList.Add(input[0]);
-                negativeNumberLabel = 1;
+                isNegative = true;
             }
 
-            for (int i = negativeNumberLabel; i < input.Length; i++)
+            for (int i = 0; i < input.Length; i++)
             {
                 if (!char.IsNumber(input[i]))
                 {
@@ -49,8 +45,58 @@ namespace IntParser
                 numberList.Add(GetIntFromChar(input[i]));
             }
 
-            number = GetNumberFromList(numberList);
+            try
+            {
+                number = GetNumberFromList(numberList, isNegative);
+            }
+            catch (Exception e)
+            {
+                number = default(int);
+                return false;
+            }
+
             return true;
+        }
+
+        /// <summary>
+        /// Try parse string to int value.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="number">The out number.</param>
+        public static void Parse(string input, out int number)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                if (input == null)
+                {
+                    throw new NullReferenceException("Input argument is null.");
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(input));
+            }
+
+            var numberList = new List<int>();
+            var isNegative = false;
+            var startIndex = 0;
+
+            if (input[0] == '-')
+            {
+                numberList.Add(input[0]);
+                isNegative = true;
+                startIndex = 1;
+            }
+
+            for (int i = startIndex; i < input.Length; i++)
+            {
+                if (!char.IsNumber(input[i]))
+                {
+                    throw new FormatException("The input string had the wrong format.");
+                }
+
+                numberList.Add(GetIntFromChar(input[i]));
+            }
+
+            number = GetNumberFromList(numberList, isNegative);
         }
 
         /// <summary>
@@ -58,31 +104,30 @@ namespace IntParser
         /// </summary>
         /// <param name="letter">The char.</param>
         /// <returns>The number type int.</returns>
-        private static int GetIntFromChar(char letter) => (int)letter - CodeZeroAsii;
+        private static int GetIntFromChar(char letter) => letter - CodeZeroAsii;
 
         /// <summary>
         /// Method for get number from array type int
         /// </summary>
         /// <param name="inputList">input array</param>
         /// <returns>result number</returns>
-        private static int GetNumberFromList(List<int> inputList)
+        private static int GetNumberFromList(List<int> inputList, bool isNegative)
         {
             var result = 0;
             var degree = 1;
-            var negativeNumberLabel = inputList[0] != '-' ? 0 : 1;
 
-            for (int i = inputList.Count - 1; i >= negativeNumberLabel; i--)
+            for (int i = inputList.Count - 1; i >= 0; i--)
             {
                 try
                 {
                     checked
                     {
-                        result += inputList[0] != '-' ? inputList[i] * degree : (-1) * inputList[i] * degree;
+                        result += inputList[i] * degree;
                     }
                 }
                 catch (OverflowException e)
                 {
-                    if (inputList[0] == '-')
+                    if (isNegative)
                     {
                         e.Data.Add("numberLabel", "negative");
                     }
@@ -97,7 +142,7 @@ namespace IntParser
                 degree *= BaseScaleNotation;
             }
 
-            return result;
+            return isNegative ? (-1) * result : result;
         }
     }
 }
